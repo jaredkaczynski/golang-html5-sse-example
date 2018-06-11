@@ -227,8 +227,14 @@ func main() {
 		}
 	}()*/
 	
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("/var/www/"))))
+	
 	http.HandleFunc("/play1", func(w http.ResponseWriter, r *http.Request) {
 		b.messages <- fmt.Sprintf("start1")
+		fmt.Println("added to messages")
+	})
+	http.HandleFunc("/play2", func(w http.ResponseWriter, r *http.Request) {
+		b.messages <- fmt.Sprintf("start2")
 		fmt.Println("added to messages")
 	})
 

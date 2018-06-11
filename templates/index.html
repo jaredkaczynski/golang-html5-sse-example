@@ -8,6 +8,27 @@
 	You're here for a better audio experience. Enjoy.
 
 	<script type="text/javascript">
+	var playing = "";
+	function getSoundAndFadeAudio (audiosnippetId) {
+
+    var sound = document.getElementById(audiosnippetId);
+
+    // Set the point in playback that fadeout begins. This is for a 2 second fade out.
+    var fadePoint = sound.duration - 2; 
+
+    var fadeAudio = setInterval(function () {
+
+        // Only fade if past the fade out point or not at zero already
+        if ((sound.currentTime >= fadePoint) && (sound.volume != 0.0)) {
+            sound.volume -= 0.1;
+        }
+        // When volume at zero stop all the intervalling
+        if (sound.volume === 0.0) {
+            clearInterval(fadeAudio);
+        }
+    }, 200);
+
+}
 
 	    // Create a new HTML5 EventSource
 	    var source = new EventSource('/events/');
@@ -16,15 +37,54 @@
 	    source.onmessage = function(e) {
 			console.log("Got message " + e.data);
 
-	        // Append the `data` attribute of the message to the DOM.
-	        //document.body.innerHTML += e.data + '<br>';
+			//Different tracks
+			//Start 1 is Fantasmic's music
 			if(e.data.includes("start1")){
 				console.log("Playing audio");
-				var audio = document.getElementById("audio");
-				audio.play();
+				if(playing != ""){
+					getSoundAndFadeAudio(playing)
+				}
+				var audio1 = document.getElementById("audio1");
+				playing = audio1;
+				var playPromise = audio1.play();
+
+				// In browsers that don’t yet support this functionality,
+				// playPromise won’t be defined.
+				if (playPromise !== undefined) {
+					playPromise.then(function() {
+					// Automatic playback started!
+					console.log("Audio starting");
+				}).catch(function(error) {
+					console.log("Audio error " + error);
+					// Automatic playback failed.
+					// Show a UI element to let the user manually start playback.
+				});
+				}
 			}
+			//Start 2 is esplanade music
+			if(e.data.includes("start2")){
+				console.log("Playing audio");
+				var audio = document.getElementById("audio2");
+				
+				var playPromise = audio.play();
+
+				// In browsers that don’t yet support this functionality,
+				// playPromise won’t be defined.
+				if (playPromise !== undefined) {
+					playPromise.then(function() {
+					// Automatic playback started!
+					console.log("Audio starting");
+				}).catch(function(error) {
+					console.log("Audio error " + error);
+					// Automatic playback failed.
+					// Show a UI element to let the user manually start playback.
+				});
+				}
+			}
+			
 	    };
 	</script>
-<audio id="audio" src="/fantasmic.ogg" ></audio>
+<audio id="audio1" src="http://104.216.19.247/fantasmic.ogg" ></audio>
+<audio id="audio2" src="http://104.216.19.247/fantasmic.ogg" ></audio>
 </body>
 </html>
