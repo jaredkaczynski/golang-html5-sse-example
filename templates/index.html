@@ -5,8 +5,7 @@
 </head>
 <body>
 
-	Yo {{.}}, here are some facinating messages about the
-	current time:<br>
+	You're here for a better audio experience. Enjoy.
 
 	<script type="text/javascript">
 
@@ -15,10 +14,17 @@
 
 	    // Create a callback for when a new message is received.
 	    source.onmessage = function(e) {
+			console.log("Got message " + e.data);
 
 	        // Append the `data` attribute of the message to the DOM.
-	        document.body.innerHTML += e.data + '<br>';
+	        //document.body.innerHTML += e.data + '<br>';
+			if(e.data.includes("start1")){
+				console.log("Playing audio");
+				var audio = document.getElementById("audio");
+				audio.play();
+			}
 	    };
 	</script>
+<audio id="audio" src="/fantasmic.ogg" ></audio>
 </body>
 </html>

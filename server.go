@@ -13,7 +13,6 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"time"
 )
 
 // A single Broker will be created in this program. It is responsible
@@ -215,7 +214,7 @@ func main() {
 	// Generate a constant stream of events that get pushed
 	// into the Broker's messages channel and are then broadcast
 	// out to any clients that are attached.
-	go func() {
+	/*go func() {
 		for i := 0; ; i++ {
 
 			// Create a little message to send to clients,
@@ -225,9 +224,13 @@ func main() {
 			// Print a nice log message and sleep for 5s.
 			log.Printf("Sent message %d ", i)
 			time.Sleep(5 * 1e9)
-
 		}
-	}()
+	}()*/
+	
+	http.HandleFunc("/play1", func(w http.ResponseWriter, r *http.Request) {
+		b.messages <- fmt.Sprintf("start1")
+		fmt.Println("added to messages")
+	})
 
 	// When we get a request at "/", call `MainPageHandler`
 	// in a new goroutine.
